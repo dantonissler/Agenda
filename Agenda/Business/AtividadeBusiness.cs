@@ -130,28 +130,13 @@ namespace Agenda.Business
         }
         public bool ValidarSatusNaoFazer(DateTime dataInicial, DateTime dataFim)
         {
-            return string.IsNullOrEmpty(dataInicial.ToString()) && string.IsNullOrEmpty(dataFim.ToString()) ? true : false;
+            return string.IsNullOrEmpty(dataInicial.ToString()) && string.IsNullOrEmpty(dataFim.ToString()) ? false : true;
         }
 
         public bool ValidarConcluida(DateTime dataFim)
         {
-            return string.IsNullOrEmpty(dataFim.ToString()) ? true : false;
+            return string.IsNullOrEmpty(dataFim.ToString()) ? false : true;
         }
-
-        //public string ValidarDatas(DateTime dataInicio, DateTime dataFim, string fail, string success)
-        //{
-        //    try
-        //    {
-        //        ValidarData(dataFim);
-        //        ValidarData(dataInicio);
-        //        ValidarData(dataInicio, dataFim);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception(fail, ex); ;
-        //    }
-        //    return success;
-        //}
 
         public string DefinirStatus(DataRow dados)
         {
@@ -165,11 +150,10 @@ namespace Agenda.Business
             bool validaStatusConcluida = ValidarConcluida(dataFim);
             bool validaStatusNaoFazer = ValidarSatusNaoFazer(dataInicio, dataFim);
 
-            if (validaStatusPraFazer) descricaoStatus = "Pra fazer";
-            if(validaStatusPendente) descricaoStatus = "Pendente";
-            if(validaStatusConcluida) descricaoStatus = "Concluída";
-            if (validaStatusConcluida) descricaoStatus = "Concluída";
-            if (validaStatusNaoFazer) descricaoStatus = "Não Fazer";
+           // if (validaStatusPraFazer) descricaoStatus = "Pra fazer";
+           // if(validaStatusPendente) descricaoStatus = "Pendente";
+           // if(validaStatusConcluida) descricaoStatus = "Concluída";
+            //if (validaStatusNaoFazer) descricaoStatus = "Não Fazer";
             return descricaoStatus;
         }
     }
