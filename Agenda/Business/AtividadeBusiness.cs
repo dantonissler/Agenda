@@ -29,8 +29,8 @@ namespace Agenda.Business
                     Id = Convert.ToInt32(atividade["Id"]),
                     Nome = atividade["Nome"].ToString(),
                     Descricao = atividade["Descricao"].ToString(),
-                    DataInicio = Convert.ToDateTime(atividade["DataInicio"]),
-                    DataFim = Convert.ToDateTime(atividade["DataFim"]),
+                    DataInicio = Convert.ToDateTime(atividade["datainicio"]),
+                    DataFim = Convert.ToDateTime(atividade["datafim"]),
                     Status = DefinirStatus(atividade)
                 });
             }
@@ -150,10 +150,10 @@ namespace Agenda.Business
             bool validaStatusConcluida = ValidarConcluida(dataFim);
             bool validaStatusNaoFazer = ValidarSatusNaoFazer(dataInicio, dataFim);
 
-           // if (validaStatusPraFazer) descricaoStatus = "Pra fazer";
-           // if(validaStatusPendente) descricaoStatus = "Pendente";
-           // if(validaStatusConcluida) descricaoStatus = "Concluída";
-            //if (validaStatusNaoFazer) descricaoStatus = "Não Fazer";
+            if (validaStatusPraFazer) descricaoStatus = "Pra fazer";
+            if(validaStatusPendente) descricaoStatus = "Pendente";
+            if(validaStatusConcluida) descricaoStatus = "Concluída";
+            if (validaStatusNaoFazer) descricaoStatus = "Não Fazer";
             return descricaoStatus;
         }
     }

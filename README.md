@@ -9,4 +9,6 @@ Criar um banco de dados no mysql usando o arquivo "sql_execute.sql" que esta den
 
 Como foi configurado o banco de dados;
 
+Dentro da pasta "Properties" tem um arquivo chamado "ConnectionDB" Onde estão as configurações do banco de dados.
+
 Outros;
