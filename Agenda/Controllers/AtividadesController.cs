@@ -14,7 +14,7 @@ namespace Agenda.Controllers
 
         public IActionResult Index()
         {
-            var atividade = _atividadesBusiness.Obter();
+            var atividade = _atividadesBusiness.Obter().OrderBy(p => p.DataInicio);
             return View(atividade);
         }
 

@@ -26,11 +26,11 @@ namespace Agenda.Business
             {
                 atividades.Add(new Atividades
                 {
-                    Id = Convert.ToInt32(atividade["Id"]),
-                    Nome = atividade["Nome"].ToString(),
-                    Descricao = atividade["Descricao"].ToString(),
-                    DataInicio = Convert.ToDateTime(atividade["datainicio"]),
-                    DataFim = Convert.ToDateTime(atividade["datafim"]),
+                    Id = Convert.ToInt32(atividade["id"]),
+                    Nome = atividade["nome"].ToString(),
+                    Descricao = atividade["descricao"].ToString(),
+                    DataInicio = string.IsNullOrEmpty(atividade["datainicio"].ToString()) ? (DateTime?)null : Convert.ToDateTime(atividade["datainicio"]),
+                    DataFim = string.IsNullOrEmpty(atividade["datafim"].ToString()) ? (DateTime?)null : Convert.ToDateTime(atividade["datafim"]),
                     Status = DefinirStatus(atividade)
                 });
             }
@@ -60,8 +60,8 @@ namespace Agenda.Business
                 Id = Convert.ToInt32(atividade.Get("id")),
                 Nome = atividade.Get("nome"),
                 Descricao = atividade.Get("descricao"),
-                DataInicio = Convert.ToDateTime(atividade.Get("datainicio")),
-                DataFim = Convert.ToDateTime(atividade.Get("datafim"))
+                DataInicio = string.IsNullOrEmpty(atividade.Get("datainicio").ToString()) ? (DateTime?)null : Convert.ToDateTime(atividade.Get("datainicio")),
+                DataFim = string.IsNullOrEmpty(atividade.Get("datafim").ToString()) ? (DateTime?)null : Convert.ToDateTime(atividade.Get("datafim"))
             };
         }
 
@@ -105,55 +105,38 @@ namespace Agenda.Business
             _connectionDB.Execute(script, parametros);
         }
 
-        public bool ValidarSatusPraFazer(DateTime dataInicial)
+        public bool ValidarSatusPraFazer(DateTime? dataInicial, DateTime? dataFim)
         {
-            bool praFazer = false;
-
-            if (dataInicial <= DateTime.Now)
-            {
-                praFazer = true;
-            }
-
-            return praFazer;
+            return  (string.IsNullOrEmpty(dataFim.ToString()) && (dataInicial > DateTime.Now)) ? true : false ;
         }
-
-        public bool ValidarStatusPendente(DateTime dataInicial)
+        public bool ValidarStatusPendente(DateTime? dataInicial, DateTime? dataFim)
         {
-            bool pendente = false;
-
-            if (dataInicial >= DateTime.Now)
-            {
-                pendente = true;
-            }
-
-            return pendente;
+            return ((dataInicial >= DateTime.Now) && (dataFim > DateTime.Now)) ? true : false;
         }
-        public bool ValidarSatusNaoFazer(DateTime dataInicial, DateTime dataFim)
+        public bool ValidarConcluida(DateTime? dataInicial, DateTime? dataFim)
         {
-            return string.IsNullOrEmpty(dataInicial.ToString()) && string.IsNullOrEmpty(dataFim.ToString()) ? false : true;
+            return ((dataInicial < DateTime.Now) && (dataFim < DateTime.Now)) ? true : false;
         }
-
-        public bool ValidarConcluida(DateTime dataFim)
+        public bool ValidarSatusNaoFazer(DateTime? dataInicial, DateTime? dataFim)
         {
-            return string.IsNullOrEmpty(dataFim.ToString()) ? false : true;
+            return (string.IsNullOrEmpty(dataInicial.ToString()) && string.IsNullOrEmpty(dataFim.ToString())) ? true : false;
         }
-
         public string DefinirStatus(DataRow dados)
         {
             string descricaoStatus = string.Empty;
+            DateTime? dataInicio = string.IsNullOrEmpty(dados["datainicio"].ToString()) ? (DateTime?)null : Convert.ToDateTime(dados["datainicio"]);
+            DateTime? dataFim = string.IsNullOrEmpty(dados["datafim"].ToString()) ? (DateTime?)null : Convert.ToDateTime(dados["datafim"]);
 
-            DateTime dataInicio = Convert.ToDateTime(dados["DataInicio"].ToString());
-            DateTime dataFim = Convert.ToDateTime(dados["DataFim"].ToString());
-
-            bool validaStatusPraFazer = ValidarSatusPraFazer(dataInicio);
-            bool validaStatusPendente = ValidarStatusPendente(dataInicio);
-            bool validaStatusConcluida = ValidarConcluida(dataFim);
+            bool validaStatusPraFazer = ValidarSatusPraFazer(dataInicio, dataFim);
+            bool validaStatusPendente = ValidarStatusPendente(dataInicio, dataFim);
+            bool validaStatusConcluida = ValidarConcluida(dataInicio, dataFim);
             bool validaStatusNaoFazer = ValidarSatusNaoFazer(dataInicio, dataFim);
 
             if (validaStatusPraFazer) descricaoStatus = "Pra fazer";
-            if(validaStatusPendente) descricaoStatus = "Pendente";
-            if(validaStatusConcluida) descricaoStatus = "Concluída";
+            if (validaStatusPendente) descricaoStatus = "Pendente";
+            if (validaStatusConcluida) descricaoStatus = "Concluída";
             if (validaStatusNaoFazer) descricaoStatus = "Não Fazer";
+
             return descricaoStatus;
         }
     }

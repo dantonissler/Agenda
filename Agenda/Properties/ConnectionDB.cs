@@ -10,7 +10,7 @@ namespace Repository
         private static readonly string Server = "localhost";
         private static readonly string Database = "Agenda";
         private static readonly string User = "root";
-        private static readonly string Password = "Dan214255";
+        private static readonly string Password = "@lamper1";
         private readonly string ConnectionString = $"Server={Server};Database={Database};Uid={User};Pwd={Password};Sslmode=none;";
 
         public void Execute(string script, Dictionary<string, object> parameters)
