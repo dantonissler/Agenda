@@ -40,29 +40,33 @@ namespace Agenda.Business
 
         public Atividades Obter(int id)
         {
-            Dictionary<string, object> parametros = new Dictionary<string, object>
+            try
             {
-                { "id", id }
-            };
-
-            string script = @"SELECT id, 
+                Dictionary<string, object> parametros = new Dictionary<string, object>
+                {
+                    { "id", id }
+                };
+                string script = @"SELECT id, 
                                      nome,
                                      descricao,
                                      datainicio,
                                      datafim
                               FROM atividades
                               WHERE id = @id";
-
-            DataSet atividade = _connectionDB.SelectDataFromMySql(script, parametros);
-
-            return new Atividades
+                DataSet atividade = _connectionDB.SelectDataFromMySql(script, parametros);
+                return new Atividades
+                {
+                    Id = Convert.ToInt32(atividade.Get("id")),
+                    Nome = atividade.Get("nome"),
+                    Descricao = atividade.Get("descricao"),
+                    DataInicio = string.IsNullOrEmpty(atividade.Get("datainicio").ToString()) ? (DateTime?)null : Convert.ToDateTime(atividade.Get("datainicio")),
+                    DataFim = string.IsNullOrEmpty(atividade.Get("datafim").ToString()) ? (DateTime?)null : Convert.ToDateTime(atividade.Get("datafim"))
+                };
+            }
+            catch 
             {
-                Id = Convert.ToInt32(atividade.Get("id")),
-                Nome = atividade.Get("nome"),
-                Descricao = atividade.Get("descricao"),
-                DataInicio = string.IsNullOrEmpty(atividade.Get("datainicio").ToString()) ? (DateTime?)null : Convert.ToDateTime(atividade.Get("datainicio")),
-                DataFim = string.IsNullOrEmpty(atividade.Get("datafim").ToString()) ? (DateTime?)null : Convert.ToDateTime(atividade.Get("datafim"))
-            };
+                return null;
+            }
         }
 
         public void Salvar(Atividades atividade)

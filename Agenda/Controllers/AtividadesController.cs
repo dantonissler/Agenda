@@ -20,7 +20,6 @@ namespace Agenda.Controllers
 
         public ActionResult Create()
         {
-            
             return View();
         }
 
@@ -43,6 +42,7 @@ namespace Agenda.Controllers
             // TODO : Validadr se a atividade não tem a data de inicio menor que a de fim
             var atividade = _atividadesBusiness.Obter(id);
             _atividadesBusiness.Alterar(atividade);
+            if (atividade == null) return NotFound();
             return View(atividade);
         }
 
@@ -60,7 +60,7 @@ namespace Agenda.Controllers
                     DataInicio = string.IsNullOrEmpty(collection["DataInicio"]) ? (DateTime?)null : Convert.ToDateTime(collection["DataInicio"]),
                     DataFim = string.IsNullOrEmpty(collection["DataFim"]) ? (DateTime?)null : Convert.ToDateTime(collection["DataFim"]),
                 };
-
+                if (atividade == null) return NotFound();
                 _atividadesBusiness.Alterar(atividade);
                 return RedirectToAction(nameof(Index));
             }
@@ -73,6 +73,7 @@ namespace Agenda.Controllers
         public ActionResult Delete(int id)
         {
             var atividade = _atividadesBusiness.Obter(id);
+            if (atividade == null) return NotFound();
             return View(atividade);
         }
 
@@ -93,6 +94,7 @@ namespace Agenda.Controllers
         public ActionResult Details(int id)
         {
             var atividade = _atividadesBusiness.Obter(id);
+            if (atividade == null) return NotFound();
             return View(atividade);
         }
     }
