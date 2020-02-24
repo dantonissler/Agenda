@@ -41,8 +41,8 @@ namespace Agenda.Controllers
         {
             // TODO : Validadr se a atividade não tem a data de inicio menor que a de fim
             var atividade = _atividadesBusiness.Obter(id);
-            _atividadesBusiness.Alterar(atividade);
             if (atividade == null) return NotFound();
+            _atividadesBusiness.Alterar(atividade);
             return View(atividade);
         }
 
@@ -51,7 +51,6 @@ namespace Agenda.Controllers
         {
             try
             {
-                // TODO : Validadr se a atividade não tem a data de inicio menor que a de fim
                 Atividades atividade = new Atividades
                 {
                     Id = id,

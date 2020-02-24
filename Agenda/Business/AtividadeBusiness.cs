@@ -34,7 +34,6 @@ namespace Agenda.Business
                     Status = DefinirStatus(atividade)
                 });
             }
-
             return atividades;
         }
 
@@ -83,7 +82,7 @@ namespace Agenda.Business
             _connectionDB.Execute(script, parametros);
         }
 
-        public void Alterar(Atividades atividade)
+        public bool Alterar(Atividades atividade)
         {
             Dictionary<string, object> parametros = new Dictionary<string, object>
             {
@@ -93,9 +92,9 @@ namespace Agenda.Business
                 { "DataInicio", atividade.DataInicio },
                 { "DataFim", atividade.DataFim },
             };
-
             string script = "UPDATE atividades SET nome = @Nome, descricao = @Descricao, datainicio = @DataInicio, datafim = @DataFim where id = @id";
             _connectionDB.Execute(script, parametros);
+            return true;
         }
 
         public void Excluir(int id)
@@ -111,7 +110,8 @@ namespace Agenda.Business
 
         public bool ValidarSatusPraFazer(DateTime? dataInicial, DateTime? dataFim)
         {
-            return  (string.IsNullOrEmpty(dataFim.ToString()) && (dataInicial > DateTime.Now)) ? true : false ;
+            return  (string.IsNullOrEmpty(dataFim.ToString()) && (dataInicial > DateTime.Now) ||
+                    string.IsNullOrEmpty(dataInicial.ToString()) && (dataFim > DateTime.Now)) ? true : false ;
         }
         public bool ValidarStatusPendente(DateTime? dataInicial, DateTime? dataFim)
         {
